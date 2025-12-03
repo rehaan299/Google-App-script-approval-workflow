@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
+    .container { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; max-width: 360px; width: 100%; }
+    h1 { margin-top: 0; color: #1f2937; }
+    p { color: #6b7280; font-size: 14px; margin-bottom: 30px; }
+    .btn { background-color: #2563eb; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; display: block; font-weight: bold; transition: background 0.2s; }
+    .btn:hover { background-color: #1d4ed8; }
+    .user { font-size: 12px; background: #eee; padding: 4px 8px; border-radius: 4px; color: #555; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="font-size:40px; margin-bottom:10px;">🔐</div>
+    <h1>Approval Portal</h1>
+    <p>Please access your dashboard to view pending requests.</p>
+    
+    <? if (detectedEmail) { ?>
+      <div style="margin-bottom: 20px;">
+        <span class="user"><?= detectedEmail ?></span>
+      </div>
+      <a href="<?= url ?>?dashboard=1&email=<?= encodeURIComponent(detectedEmail) ?>" class="btn">
+        Enter Dashboard &rarr;
+      </a>
+    <? } else { ?>
+      <p style="color:#ef4444;">Could not detect your email.</p>
+    <? } ?>
+  </div>
+</body>
+</html>
