@@ -1,0 +1,51 @@
+<script>
+  window.onload = () => {
+    const commentsInput = document.getElementById("comments");
+    const btnApprove = document.getElementById("approve");
+    const btnReject = document.getElementById("reject");
+    const promptBox = document.getElementById("prompt-message");
+    const form = document.getElementById("approval-form");
+
+    if (!form) return; // Not on approval page
+
+    const taskId = form.getAttribute("data-task");
+
+    const setLoading = (isLoading, action) => {
+      btnApprove.disabled = isLoading;
+      btnReject.disabled = isLoading;
+      if (commentsInput) commentsInput.disabled = isLoading;
+      
+      if (isLoading) {
+         promptBox.innerHTML = `<span style="color:#6b7280">⏳ Processing ${action}...</span>`;
+      }
+    };
+
+    const handleAction = (action) => {
+      const comments = commentsInput ? commentsInput.value : "";
+      setLoading(true, action);
+
+      const handler = (action === "approve") ? google.script.run.approve : google.script.run.reject;
+
+      handler({ taskId, comments })
+        .withSuccessHandler(() => {
+          // Success UI
+          form.innerHTML = `
+            <div style="text-align:center; padding: 20px;">
+              <div style="font-size: 40px; margin-bottom:10px;">${action === 'approve' ? '✅' : '⛔'}</div>
+              <h3 style="margin:0; color:#111827;">Decision Recorded</h3>
+              <p style="color:#6b7280;">You have successfully <strong>${action}d</strong> this request.</p>
+              <p style="font-size:12px; color:#9ca3af; margin-top:20px;">You can close this tab.</p>
+            </div>
+          `;
+          promptBox.innerHTML = "";
+        })
+        .withFailureHandler((err) => {
+          setLoading(false);
+          promptBox.innerHTML = `<div class="msg-error">Error: ${err.message}</div>`;
+        });
+    };
+
+    btnApprove.addEventListener("click", (e) => { e.preventDefault(); handleAction("approve"); });
+    btnReject.addEventListener("click", (e) => { e.preventDefault(); handleAction("reject"); });
+  };
+</script>
