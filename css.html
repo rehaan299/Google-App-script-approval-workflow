@@ -1,0 +1,229 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    /* Brand Colors */
+    --primary: #005087;       /* Main Brand Color */
+    --primary-light: #e0f2fe; /* Light Blue Background */
+    --text-main: #1f2937;     /* Dark Grey */
+    --text-muted: #6b7280;    /* Muted Grey */
+    --border: #e5e7eb;        /* Light Border */
+    --bg-body: #f3f4f6;       /* App Background */
+    
+    /* State Colors */
+    --success-bg: #d1fae5; --success-text: #065f46;
+    --warn-bg: #fef3c7;    --warn-text: #92400e;
+    --danger-bg: #fee2e2;  --danger-text: #991b1b;
+    --neutral-bg: #f3f4f6; --neutral-text: #4b5563;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.5;
+  }
+
+  /* --- Layout --- */
+  .app-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  .grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Main Content | Sidebar */
+    gap: 24px;
+  }
+
+  /* --- Header --- */
+  .header {
+    background: #fff;
+    padding: 24px 32px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border);
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .header-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* --- Cards --- */
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fafafa;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  .card-body {
+    padding: 24px;
+  }
+
+  /* --- Data Lists --- */
+  .data-group {
+    margin-bottom: 16px;
+  }
+  .data-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .data-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-main);
+    word-break: break-word;
+  }
+
+  /* --- Timeline (The Sexy Part) --- */
+  .timeline {
+    position: relative;
+    padding-left: 12px;
+  }
+  
+  .timeline-item {
+    position: relative;
+    padding-left: 24px;
+    padding-bottom: 32px;
+    border-left: 2px solid var(--border);
+  }
+
+  .timeline-item:last-child {
+    border-left: 2px solid transparent;
+    padding-bottom: 0;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: -7px;
+    top: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--border);
+  }
+
+  .timeline-marker.completed { background: var(--success-text); border-color: var(--success-text); }
+  .timeline-marker.rejected { background: var(--danger-text); border-color: var(--danger-text); }
+  .timeline-marker.current { background: var(--warn-text); border-color: var(--warn-text); box-shadow: 0 0 0 4px var(--warn-bg); }
+
+  .timeline-content h4 { margin: 0; font-size: 0.9rem; font-weight: 600; }
+  .timeline-content p { margin: 2px 0 0; font-size: 0.8rem; color: var(--text-muted); }
+  
+  .comment-bubble {
+    margin-top: 8px;
+    background: var(--bg-body);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* --- Badges --- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .badge.pending { background: var(--warn-bg); color: var(--warn-text); }
+  .badge.approved { background: var(--success-bg); color: var(--success-text); }
+  .badge.rejected { background: var(--danger-bg); color: var(--danger-text); }
+  .badge.waiting { background: var(--neutral-bg); color: var(--neutral-text); }
+
+  /* --- Forms & Buttons --- */
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+  textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
+  .btn-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+  button:active { transform: scale(0.98); }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .btn-approve { background: #10b981; color: white; }
+  .btn-approve:hover { background: #059669; }
+  
+  .btn-reject { background: #ef4444; color: white; }
+  .btn-reject:hover { background: #dc2626; }
+
+  /* --- Status Messages --- */
+  #prompt-message { margin-top: 16px; font-size: 0.9rem; text-align: center; }
+  .msg-success { color: var(--success-text); font-weight: 500; }
+  .msg-error { color: var(--danger-text); font-weight: 500; }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .grid-layout { grid-template-columns: 1fr; }
+    .header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+</style>
