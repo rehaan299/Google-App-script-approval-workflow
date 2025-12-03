@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Approval Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* RESET & VARS */
+    :root {
+      --primary: #2563eb; --primary-hover: #1d4ed8;
+      --bg: #f3f4f6; --surface: #ffffff;
+      --text: #1f2937; --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --success: #10b981; --danger: #ef4444; --warn: #f59e0b;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; }
+    
+    /* LAYOUT */
+    .app-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+    
+    /* HEADER */
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+    .header h1 { font-size: 24px; font-weight: 700; color: #111827; margin: 0; }
+    .user-pill { background: #dbeafe; color: #1e40af; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+
+    /* CARDS */
+    .card { background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 24px; border: 1px solid var(--border); transition: transform 0.15s ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    
+    .card-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .card-title { font-weight: 600; font-size: 16px; margin: 0; }
+    .card-meta { font-size: 12px; color: var(--text-muted); }
+    
+    .card-body { padding: 20px; }
+    .data-row { display: grid; grid-template-columns: 120px 1fr; margin-bottom: 8px; font-size: 14px; }
+    .data-label { color: var(--text-muted); font-weight: 500; }
+    
+    .card-footer { padding: 16px 20px; background: #f9fafb; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+    
+    /* BUTTONS */
+    .btn { padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; border: none; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    
+    /* TABS */
+    .tabs { display: flex; gap: 20px; border-bottom: 2px solid var(--border); margin-bottom: 30px; }
+    .tab { padding: 10px 0; cursor: pointer; color: var(--text-muted); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+    .tab.active { color: var(--primary); border-color: var(--primary); }
+    
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-icon { font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.5; }
+
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .tag-pending { background: #fef3c7; color: #92400e; }
+    .tag-approved { background: #d1fae5; color: #065f46; }
+    .tag-rejected { background: #fee2e2; color: #991b1b; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <div class="header">
+      <div>
+        <h1>Approval Dashboard</h1>
+        <div style="font-size:13px; color:#6b7280; margin-top:4px;">Manage your team's requests</div>
+      </div>
+      <div class="user-pill">
+        👤 <?= approverEmail ?>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('pending')">Pending (<?= pendingTotal ?>)</div>
+      <div class="tab" onclick="switchTab('history')">History</div>
+    </div>
+
+    <div id="pending" class="section active">
+      <? if (pendingItems.length === 0) { ?>
+        <div class="empty-state">
+          <span class="empty-icon">🎉</span>
+          <h3>All caught up!</h3>
+          <p>You have no pending approval requests at this time.</p>
+        </div>
+      <? } else { ?>
+        <? pendingItems.forEach(function(item) { ?>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><?= item.employeeName ?></div>
+                <div class="card-meta">Submitted: <?= item.lastUpdated ?></div>
+              </div>
+              <span class="tag tag-pending">Action Required</span>
+            </div>
+            <div class="card-body">
+              <div class="data-row">
+                <span class="data-label">Department</span>
+                <span><?= item.section ?> | <?= item.team ?></span>
+              </div>
+              <div class="data-row">
+                <span class="data-label">Cost</span>
+                <span><?= item.cost ?></span>
+              </div>
+              <div class="data-row">
+                <span class="data-label">Description</span>
+                <span><?= item.description ?></span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button onclick="openLink('<?= url ?>?taskId=<?= item.taskId ?>&action=approve')" class="btn btn-success">✓ Approve</button>
+              <button onclick="openLink('<?= url ?>?taskId=<?= item.taskId ?>&action=reject')" class="btn btn-danger">✕ Reject</button>
+            </div>
+          </div>
+        <? }) ?>
+      <? } ?>
+    </div>
+
+    <div id="history" class="section">
+       <h3 style="font-size:14px; text-transform:uppercase; color:#9ca3af; margin: 20px 0 10px 0;">Recently Processed</h3>
+       
+       <? var historyItems = approvedItems.concat(rejectedItems); ?>
+       <? if (historyItems.length === 0) { ?>
+         <div class="empty-state">No history found.</div>
+       <? } else { ?>
+         <? historyItems.forEach(function(item) { 
+            var statusClass = (item.overallStatus === "Approved") ? "tag-approved" : "tag-rejected";
+         ?>
+          <div class="card" style="opacity: 0.8;">
+            <div class="card-header" style="background: #f9fafb;">
+               <div class="card-title"><?= item.employeeName ?></div>
+               <span class="tag <?= statusClass ?>"><?= item.overallStatus ?></span>
+            </div>
+            <div class="card-body" style="padding: 15px 20px;">
+              <div style="font-size: 13px; color: #666;">
+                 <strong><?= item.description ?></strong><br>
+                 <span style="color:#999; font-size:11px;">Processed on: <?= item.lastUpdated ?></span>
+              </div>
+            </div>
+          </div>
+         <? }) ?>
+       <? } ?>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tabName) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      
+      // Show target
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function openLink(url) {
+      if(confirm("Confirm your decision?")) {
+        window.open(url, '_blank');
+        // Simple UI removal for immediate feedback
+        event.target.closest('.card').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
