@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <?!= include("css.html") ?>
+  <body>
+    
+    <div class="app-container">
+      
+      <header class="header">
+        <div>
+          <h1><?= title ?></h1>
+          <div class="header-subtitle">Status Tracker</div>
+        </div>
+        <div>
+          <? if (status === approved) { ?>
+            <span class="badge approved" style="font-size: 1rem; padding: 8px 16px;">Fully Approved</span>
+          <? } else if (status === rejected) { ?>
+            <span class="badge rejected" style="font-size: 1rem; padding: 8px 16px;">Rejected</span>
+          <? } else { ?>
+            <span class="badge pending" style="font-size: 1rem; padding: 8px 16px;">In Progress</span>
+          <? } ?>
+        </div>
+      </header>
+
+      <? if (task) { ?>
+        <div class="grid-layout">
+          
+          <main>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Submission Details</div>
+              </div>
+              <div class="card-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <? task.forEach( item => { ?>
+                    <div class="data-group">
+                      <label class="data-label"><?= item.label ?></label>
+                      <div class="data-value"><?!= item.value ?></div>
+                    </div>
+                  <? }) ?>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <aside>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Live Status</div>
+              </div>
+              <div class="card-body">
+                <div class="timeline">
+                  <? approvers.forEach((item) => { 
+                     let markerClass = "";
+                     if (item.status === approved) markerClass = "completed";
+                     else if (item.status === rejected) markerClass = "rejected";
+                     else if (item.status === pending) markerClass = "current";
+                  ?>
+                    <div class="timeline-item">
+                      <div class="timeline-marker <?= markerClass ?>"></div>
+                      <div class="timeline-content">
+                        <h4><?= item.title ?></h4>
+                        <p><?= item.name ?></p>
+                        
+                        <div style="margin-top:4px;">
+                          <? if (item.status === approved) { ?>
+                            <span class="badge approved" style="font-size:0.65rem">Approved</span>
+                          <? } else if (item.status === rejected) { ?>
+                            <span class="badge rejected" style="font-size:0.65rem">Rejected</span>
+                          <? } else if (item.status === pending) { ?>
+                            <span class="badge pending" style="font-size:0.65rem">Current Step</span>
+                          <? } else { ?>
+                            <span class="badge waiting" style="font-size:0.65rem">Waiting</span>
+                          <? } ?>
+                        </div>
+
+                         <? if (item.comments) { ?>
+                          <div class="comment-bubble">
+                            "<?= item.comments ?>"
+                          </div>
+                        <? } ?>
+                      </div>
+                    </div>
+                  <? }) ?>
+                </div>
+
+                <div style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted); padding-top: 16px; border-top: 1px solid var(--border);">
+                  <strong>Legend:</strong><br>
+                  <span style="color:var(--success-text)">●</span> Approved &nbsp;
+                  <span style="color:var(--warn-text)">●</span> Current &nbsp;
+                  <span style="color:var(--danger-text)">●</span> Rejected
+                </div>
+
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      <? } else { ?>
+        <div class="card" style="text-align:center; padding: 60px;">
+          <h2 style="color:var(--text-muted)">Record Not Found</h2>
+        </div>
+      <? } ?>
+    
+    </div>
+    <?!= include("js.html") ?>
+  </body>
+</html>
