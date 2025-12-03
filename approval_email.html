@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f7f6; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+  
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #f4f7f6; padding: 40px 0;">
+    <tr>
+      <td align="center">
+        
+        <table width="600" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden;">
+          
+          <tr>
+            <td style="background-color: #2c3e50; padding: 30px 40px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700; letter-spacing: 0.5px;">
+                <?= title ?>
+              </h1>
+              <p style="margin: 5px 0 0 0; color: #aab7c4; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">
+                Approval Request
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 40px;">
+              
+              <p style="margin: 0 0 16px 0; font-size: 16px; color: #333333; line-height: 1.6;">
+                Hi <strong><?= approver.name ?></strong>,
+              </p>
+              
+              <? if (isEdit) { ?>
+                <table width="100%" bgcolor="#fff8e1" cellpadding="15" style="border-radius: 6px; border: 1px solid #ffe58f; margin-bottom: 20px;">
+                  <tr>
+                    <td style="color: #b7791f; font-size: 14px; line-height: 1.5;">
+                      <strong>⚠️ Request Edited:</strong> The applicant modified their submission. Approvals have been reset.
+                    </td>
+                  </tr>
+                </table>
+              <? } ?>
+
+              <p style="margin: 0 0 24px 0; font-size: 15px; color: #555555; line-height: 1.6;">
+                You are reviewing this as <strong><?= approver.title ?></strong>. Please review the details below.
+              </p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #eef2f7; border-radius: 8px; overflow: hidden; margin-bottom: 30px;">
+                <? task.forEach(function(item, index) { ?>
+                  <tr>
+                    <td width="35%" style="background-color: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #eef2f7; font-size: 13px; font-weight: 600; color: #64748b;">
+                      <?= item.label ?>
+                    </td>
+                    <td style="padding: 12px 16px; border-bottom: 1px solid #eef2f7; font-size: 14px; color: #334155;">
+                      <?!= item.value ?>
+                    </td>
+                  </tr>
+                <? }) ?>
+              </table>
+
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" style="padding-bottom: 10px;">
+                    <a href="<?= approveUrl ?>" style="background-color: #10b981; color: #ffffff; display: inline-block; padding: 14px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 15px; margin-right: 10px;">
+                      ✓ Approve
+                    </a>
+                    <a href="<?= rejectUrl ?>" style="background-color: #ef4444; color: #ffffff; display: inline-block; padding: 14px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 15px;">
+                      ✕ Reject
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding-top: 15px;">
+                    <a href="<?= dashboardUrl ?>" style="color: #64748b; font-size: 13px; text-decoration: none; border-bottom: 1px dotted #64748b;">
+                      View in Dashboard
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #eef2f7;">
+              <p style="margin: 0; font-size: 12px; color: #94a3b8;">
+                Automated Workflow System · <a href="<?= formUrl ?>" style="color: #3b82f6; text-decoration: none;">Submit New Request</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
